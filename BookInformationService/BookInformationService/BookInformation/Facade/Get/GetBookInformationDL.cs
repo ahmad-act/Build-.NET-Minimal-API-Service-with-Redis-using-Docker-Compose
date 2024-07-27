@@ -19,7 +19,7 @@ public class GetBookInformationDL : IGetBookInformationDL
     {
         try
         {
-            BookInformationModel? bookInformation = await _dbContext.DbSetBookInformation
+            BookInformationModel? bookInformation = await _dbContext.BookInformation
                                                             .AsNoTracking()
                                                             .FirstOrDefaultAsync(b => b.Id == id, ct);
 

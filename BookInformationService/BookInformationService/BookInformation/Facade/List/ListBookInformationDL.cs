@@ -15,11 +15,11 @@ public class ListBookInformationDL : IListBookInformationDL
         _dbContext = dbContext;
     }
 
-    public async Task<Dictionary<string, object?>> ListBookInformation()
+    public async Task<Dictionary<string, object?>> ListBookInformation(CancellationToken ct)
     {
         try
         {
-            List<BookInformationModel>? bookInformations = await _dbContext.DbSetBookInformation
+            List<BookInformationModel>? bookInformations = await _dbContext.BookInformation
                                                             .AsNoTracking()
                                                             .ToListAsync();
 

@@ -27,7 +27,7 @@ namespace BookInformationService.DatabaseContext;
 
 public class SystemDbContext : DbContext
 {
-    public DbSet<BookInformationModel> DbSetBookInformation { get; set; }
+    public DbSet<BookInformationModel> BookInformation { get; set; } // EF will create a table by the name "BookInformation" 
 
     public SystemDbContext(DbContextOptions<SystemDbContext> options) : base(options)
     {

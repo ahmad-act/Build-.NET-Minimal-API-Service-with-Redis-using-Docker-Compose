@@ -15,14 +15,14 @@ public class CreateBookInformationBL : ICreateBookInformationBL
         _createBookInformationDL = createBookInformationDL;
     }
 
-    public async Task<CreateResponse> CreateBookInformation(string apiVersion, CreateRequest request)
+    public async Task<CreateResponse> CreateBookInformation(string apiVersion, CreateRequest request, CancellationToken ct)
     {
         try
         {
             return apiVersion switch
             {
-                "1" => await HandleApiVersion1(apiVersion, request),
-                "2" => await HandleApiVersion2(apiVersion, request),
+                "1" => await HandleApiVersion1(apiVersion, request, ct),
+                "2" => await HandleApiVersion2(apiVersion, request, ct),
                 _ => InvalidApiVersionResponse(apiVersion)
             };
         }
@@ -88,9 +88,9 @@ public class CreateBookInformationBL : ICreateBookInformationBL
 
     #region Version based methods
 
-    private async Task<CreateResponse> HandleApiVersion1(string apiVersion, CreateRequest request)
+    private async Task<CreateResponse> HandleApiVersion1(string apiVersion, CreateRequest request, CancellationToken ct)
     {
-        Dictionary<string, object?> dbReturn = await _createBookInformationDL.CreateBookInformation(request.ToBookInformationModel());
+        Dictionary<string, object?> dbReturn = await _createBookInformationDL.CreateBookInformation(request.ToBookInformationModel(), ct);
 
         string? dbErr = Convert.ToString(dbReturn["Message"]);
 
@@ -108,9 +108,9 @@ public class CreateBookInformationBL : ICreateBookInformationBL
         };
     }
 
-    private async Task<CreateResponse> HandleApiVersion2(string apiVersion, CreateRequest request)
+    private async Task<CreateResponse> HandleApiVersion2(string apiVersion, CreateRequest request, CancellationToken ct)
     {
-        Dictionary<string, object?> dbReturn = await _createBookInformationDL.CreateBookInformation(request.ToBookInformationModel());
+        Dictionary<string, object?> dbReturn = await _createBookInformationDL.CreateBookInformation(request.ToBookInformationModel(), ct);
 
         string? dbErr = Convert.ToString(dbReturn["Message"]);
 

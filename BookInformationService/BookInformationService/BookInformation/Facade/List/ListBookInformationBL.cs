@@ -15,14 +15,14 @@ public class ListBookInformationBL : IListBookInformationBL
         _listBookInformationDL = listBookInformationDL;
     }
 
-    public async Task<ListResponse> ListBookInformation(string apiVersion)
+    public async Task<ListResponse> ListBookInformation(string apiVersion, CancellationToken ct)
     {
         try
         {
             return apiVersion switch
             {
-                "1" => await HandleApiVersion1(apiVersion),
-                "2" => await HandleApiVersion2(apiVersion),
+                "1" => await HandleApiVersion1(apiVersion, ct),
+                "2" => await HandleApiVersion2(apiVersion, ct),
                 _ => InvalidApiVersionResponse(apiVersion)
             };
         }
@@ -105,9 +105,9 @@ public class ListBookInformationBL : IListBookInformationBL
 
     #region Version based methods
 
-    private async Task<ListResponse> HandleApiVersion1(string apiVersion)
+    private async Task<ListResponse> HandleApiVersion1(string apiVersion, CancellationToken ct)
     {
-        Dictionary<string, object?> dbReturn = await _listBookInformationDL.ListBookInformation();
+        Dictionary<string, object?> dbReturn = await _listBookInformationDL.ListBookInformation(ct);
 
         string? dbErr = Convert.ToString(dbReturn["Message"]);
 
@@ -130,9 +130,9 @@ public class ListBookInformationBL : IListBookInformationBL
         };
     }
 
-    private async Task<ListResponse> HandleApiVersion2(string apiVersion)
+    private async Task<ListResponse> HandleApiVersion2(string apiVersion, CancellationToken ct)
     {
-        Dictionary<string, object?> dbReturn = await _listBookInformationDL.ListBookInformation();
+        Dictionary<string, object?> dbReturn = await _listBookInformationDL.ListBookInformation(ct);
 
         string? dbErr = Convert.ToString(dbReturn["Message"]);
 

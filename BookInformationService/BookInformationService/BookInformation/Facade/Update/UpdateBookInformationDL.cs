@@ -14,11 +14,11 @@ public class UpdateBookInformationDL : IUpdateBookInformationDL
         _dbContext = dbContext;
     }
 
-    public async Task<Dictionary<string, object?>> GetBookInformation(int id)
+    public async Task<Dictionary<string, object?>> GetBookInformation(int id, CancellationToken ct)
     {
         try
         {
-            BookInformationModel? bookInformation = await _dbContext.DbSetBookInformation.FindAsync(id);
+            BookInformationModel? bookInformation = await _dbContext.BookInformation.FindAsync(id);
             return new Dictionary<string, object?>
             {
                 { "Message", string.Empty },
@@ -37,11 +37,11 @@ public class UpdateBookInformationDL : IUpdateBookInformationDL
         }
     }
 
-    public async Task<Dictionary<string, object?>> UpdateBookInformation(BookInformationModel bookInformation)
+    public async Task<Dictionary<string, object?>> UpdateBookInformation(BookInformationModel bookInformation, CancellationToken ct)
     {
         try
         {
-            _dbContext.DbSetBookInformation.Update(bookInformation);
+            _dbContext.BookInformation.Update(bookInformation);
             int result = await _dbContext.SaveChangesAsync();
 
             return new Dictionary<string, object?>

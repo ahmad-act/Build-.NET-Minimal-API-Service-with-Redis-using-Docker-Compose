@@ -14,14 +14,14 @@ public class DeleteBookInformationBL : IDeleteBookInformationBL
         _deleteBookInformationDL = deleteBookInformationDL;
     }
 
-    public async Task<DeleteResponse> DeleteBookInformation(string apiVersion, int id)
+    public async Task<DeleteResponse> DeleteBookInformation(string apiVersion, int id, CancellationToken ct)
     {
         try
         {
             return apiVersion switch
             {
-                "1" => await HandleApiVersion1(apiVersion, id),
-                "2" => await HandleApiVersion2(apiVersion, id),
+                "1" => await HandleApiVersion1(apiVersion, id, ct),
+                "2" => await HandleApiVersion2(apiVersion, id, ct),
                 _ => InvalidApiVersionResponse(apiVersion)
             };
         }
@@ -100,9 +100,9 @@ public class DeleteBookInformationBL : IDeleteBookInformationBL
 
     #region Version based methods
 
-    private async Task<DeleteResponse> HandleApiVersion1(string apiVersion, int id)
+    private async Task<DeleteResponse> HandleApiVersion1(string apiVersion, int id, CancellationToken ct)
     {
-        Dictionary<string, object?> dbReturn = await _deleteBookInformationDL.GetBookInformation(id);
+        Dictionary<string, object?> dbReturn = await _deleteBookInformationDL.GetBookInformation(id, ct);
 
         string? dbErr = Convert.ToString(dbReturn["Message"]);
 
@@ -118,7 +118,7 @@ public class DeleteBookInformationBL : IDeleteBookInformationBL
             return NotFoundResponse(apiVersion);
         }
 
-        await _deleteBookInformationDL.DeleteBookInformation(existingBookInformation);
+        await _deleteBookInformationDL.DeleteBookInformation(existingBookInformation, ct);
 
         return new DeleteResponse
         {
@@ -127,9 +127,9 @@ public class DeleteBookInformationBL : IDeleteBookInformationBL
         };
     }
 
-    private async Task<DeleteResponse> HandleApiVersion2(string apiVersion, int id)
+    private async Task<DeleteResponse> HandleApiVersion2(string apiVersion, int id, CancellationToken ct)
     {
-        Dictionary<string, object?> dbReturn = await _deleteBookInformationDL.GetBookInformation(id);
+        Dictionary<string, object?> dbReturn = await _deleteBookInformationDL.GetBookInformation(id, ct);
 
         string? dbErr = Convert.ToString(dbReturn["Message"]);
 
@@ -145,7 +145,7 @@ public class DeleteBookInformationBL : IDeleteBookInformationBL
             return NotFoundResponse(apiVersion);
         }
 
-        await _deleteBookInformationDL.DeleteBookInformation(existingBookInformation);
+        await _deleteBookInformationDL.DeleteBookInformation(existingBookInformation, ct);
 
         return new DeleteResponse
         {

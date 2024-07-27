@@ -4,6 +4,6 @@ namespace BookInformationService.BookInformation.Facade.Delete
 {
     public interface IDeleteBookInformationBL
     {
-        Task<DeleteResponse> DeleteBookInformation(string apiVersion, int id);
+        Task<DeleteResponse> DeleteBookInformation(string apiVersion, int id, CancellationToken ct);
     }
 }

@@ -14,11 +14,11 @@ public class DeleteBookInformationDL : IDeleteBookInformationDL
         _dbContext = dbContext;
     }
 
-    public async Task<Dictionary<string, object?>> GetBookInformation(int id)
+    public async Task<Dictionary<string, object?>> GetBookInformation(int id, CancellationToken ct)
     {
         try
         {
-            BookInformationModel? bookInformation = await _dbContext.DbSetBookInformation.FindAsync(id);
+            BookInformationModel? bookInformation = await _dbContext.BookInformation.FindAsync(id);
 
             return new Dictionary<string, object?>
             {
@@ -38,11 +38,11 @@ public class DeleteBookInformationDL : IDeleteBookInformationDL
         }
     }
 
-    public async Task<Dictionary<string, object?>> DeleteBookInformation(BookInformationModel bookInformation)
+    public async Task<Dictionary<string, object?>> DeleteBookInformation(BookInformationModel bookInformation, CancellationToken ct)
     {
         try
         {
-            _dbContext.DbSetBookInformation.Remove(bookInformation);
+            _dbContext.BookInformation.Remove(bookInformation);
             int result = await _dbContext.SaveChangesAsync();
 
             return new Dictionary<string, object?>

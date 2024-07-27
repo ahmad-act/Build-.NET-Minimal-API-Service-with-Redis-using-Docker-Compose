@@ -28,9 +28,19 @@ services:
     networks:
       - my_bookinfo_network
 
+  redisservice:
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    networks:
+      - my_bookinfo_network
+
 volumes:
   postgres_data:
     driver: local # Using the default driver for local storage
+  redis_data:
+    driver: local 
 
 networks:
   my_bookinfo_network:

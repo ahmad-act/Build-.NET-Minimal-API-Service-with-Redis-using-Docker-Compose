@@ -14,14 +14,14 @@ public class UpdateBookInformationBL : IUpdateBookInformationBL
         _updateBookInformationDL = getBookInformationDL;
     }
 
-    public async Task<UpdateResponse> UpdateBookInformation(string apiVersion, int id, UpdateRequest request)
+    public async Task<UpdateResponse> UpdateBookInformation(string apiVersion, int id, UpdateRequest request, CancellationToken ct)
     {
         try
         {
             return apiVersion switch
             {
-                "1" => await HandleApiVersion1(apiVersion, id, request),
-                "2" => await HandleApiVersion2(apiVersion, id, request),
+                "1" => await HandleApiVersion1(apiVersion, id, request, ct),
+                "2" => await HandleApiVersion2(apiVersion, id, request, ct),
                 _ => InvalidApiVersionResponse(apiVersion)
             };
         }
@@ -99,9 +99,9 @@ public class UpdateBookInformationBL : IUpdateBookInformationBL
 
     #region Version based methods
 
-    private async Task<UpdateResponse> HandleApiVersion1(string apiVersion, int id, UpdateRequest request)
+    private async Task<UpdateResponse> HandleApiVersion1(string apiVersion, int id, UpdateRequest request, CancellationToken ct)
     {
-        Dictionary<string, object?> dbGetReturn = await _updateBookInformationDL.GetBookInformation(id);
+        Dictionary<string, object?> dbGetReturn = await _updateBookInformationDL.GetBookInformation(id, ct);
 
         string? dbGetErr = Convert.ToString(dbGetReturn["Message"]);
 
@@ -121,7 +121,7 @@ public class UpdateBookInformationBL : IUpdateBookInformationBL
         existingBookInformation.Available += request.Stock - existingBookInformation.Stock;
         existingBookInformation.Stock = request.Stock;
 
-        Dictionary<string, object?> dbUpdateReturn = await _updateBookInformationDL.UpdateBookInformation(existingBookInformation);
+        Dictionary<string, object?> dbUpdateReturn = await _updateBookInformationDL.UpdateBookInformation(existingBookInformation, ct);
 
         string? dbUpdateErr = Convert.ToString(dbUpdateReturn["Message"]);
 
@@ -139,9 +139,9 @@ public class UpdateBookInformationBL : IUpdateBookInformationBL
         };
     }
 
-    private async Task<UpdateResponse> HandleApiVersion2(string apiVersion, int id, UpdateRequest request)
+    private async Task<UpdateResponse> HandleApiVersion2(string apiVersion, int id, UpdateRequest request, CancellationToken ct)
     {
-        Dictionary<string, object?> dbGetReturn = await _updateBookInformationDL.GetBookInformation(id);
+        Dictionary<string, object?> dbGetReturn = await _updateBookInformationDL.GetBookInformation(id, ct);
 
         string? dbGetErr = Convert.ToString(dbGetReturn["Message"]);
 
@@ -161,7 +161,7 @@ public class UpdateBookInformationBL : IUpdateBookInformationBL
         existingBookInformation.Available += request.Stock - existingBookInformation.Stock;
         existingBookInformation.Stock = request.Stock;
 
-        Dictionary<string, object?> dbUpdateReturn = await _updateBookInformationDL.UpdateBookInformation(existingBookInformation);
+        Dictionary<string, object?> dbUpdateReturn = await _updateBookInformationDL.UpdateBookInformation(existingBookInformation, ct);
 
         string? dbUpdateErr = Convert.ToString(dbUpdateReturn["Message"]);
 

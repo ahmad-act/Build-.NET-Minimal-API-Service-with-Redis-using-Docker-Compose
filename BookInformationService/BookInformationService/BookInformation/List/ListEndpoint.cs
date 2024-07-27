@@ -1,5 +1,7 @@
 ﻿using BookInformationService.BookInformation.Facade.List;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Caching.Distributed;
+using Newtonsoft.Json;
 
 namespace BookInformationService.BookInformation.List;
 
@@ -16,16 +18,36 @@ public static class ListEndpoint
             .Produces<ProblemDetails>(StatusCodes.Status500InternalServerError, "application/problem+json");
     }
 
-    public static async Task<IResult> handleAsync(HttpContext httpContext, IListBookInformationBL listBookInformationBL)
+    public static async Task<IResult> handleAsync(HttpContext httpContext, IListBookInformationBL listBookInformationBL, IDistributedCache cache, CancellationToken ct)
     {
         var apiVersion = httpContext.GetRequestedApiVersion();
+        var cacheKey = $"ListBookInformation_{apiVersion}"; // Unique cache key based on API version
 
-        ListResponse response = await listBookInformationBL.ListBookInformation(apiVersion!.ToString());
+        // Try to get data from cache
+        var cachedData = await cache.GetStringAsync(cacheKey, ct);
 
-        if(response.ErrorResult != Results.Ok())
+        if (!string.IsNullOrEmpty(cachedData))
+        {
+            var responseFromCache = JsonConvert.DeserializeObject<ListResponse>(cachedData);
+            return Results.Ok(responseFromCache);
+        }
+
+        // Fetch data from business logic layer if not cached
+        ListResponse response = await listBookInformationBL.ListBookInformation(apiVersion!.ToString(), ct);
+
+        if (response.ErrorResult != Results.Ok())
         {
             return response.ErrorResult;
         }
+
+        // Store data in cache
+        var cacheOptions = new DistributedCacheEntryOptions
+        {
+            AbsoluteExpirationRelativeToNow = TimeSpan.FromMinutes(15) // Cache expiration time
+        };
+
+        var serializedData = JsonConvert.SerializeObject(response);
+        await cache.SetStringAsync(cacheKey, serializedData, cacheOptions, ct);
 
         return Results.Ok(response);
     }

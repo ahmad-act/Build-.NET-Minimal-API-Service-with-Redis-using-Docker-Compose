@@ -19,6 +19,7 @@ using BookInformationService.BookInformation.Facade.Get;
 using BookInformationService.BookInformation.Facade.Create;
 using BookInformationService.BookInformation.Facade.Update;
 using BookInformationService.BookInformation.Facade.Delete;
+using System;
 
 //namespace BookInformationService;
 
@@ -93,6 +94,14 @@ builder.Services.AddScoped<IUpdateBookInformationBL, UpdateBookInformationBL>();
 // Delete
 builder.Services.AddScoped<IDeleteBookInformationDL, DeleteBookInformationDL>();
 builder.Services.AddScoped<IDeleteBookInformationBL, DeleteBookInformationBL>();
+
+
+// Configure Redis caching
+builder.Services.AddStackExchangeRedisCache(options =>
+{
+    options.Configuration = configuration.GetConnectionString("Redis");
+    options.InstanceName = "BookInformationServiceInstance:";
+});
 
 
 var app = builder.Build();

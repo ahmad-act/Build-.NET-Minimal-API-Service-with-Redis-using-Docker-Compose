@@ -4,6 +4,6 @@ namespace BookInformationService.BookInformation.Facade.List
 {
     public interface IListBookInformationBL
     {
-        Task<ListResponse> ListBookInformation(string apiVersion);
+        Task<ListResponse> ListBookInformation(string apiVersion, CancellationToken ct);
     }
 }

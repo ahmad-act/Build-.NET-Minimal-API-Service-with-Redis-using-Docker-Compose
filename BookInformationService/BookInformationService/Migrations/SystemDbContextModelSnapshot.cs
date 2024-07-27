@@ -45,7 +45,7 @@ namespace BookInformationService.Migrations
                     b.HasIndex("Title")
                         .IsUnique();
 
-                    b.ToTable("DbSetBookInformation");
+                    b.ToTable("BookInformation");
                 });
 #pragma warning restore 612, 618
         }

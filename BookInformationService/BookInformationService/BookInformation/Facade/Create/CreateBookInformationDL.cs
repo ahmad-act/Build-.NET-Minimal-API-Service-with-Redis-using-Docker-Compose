@@ -15,11 +15,11 @@ public class CreateBookInformationDL : ICreateBookInformationDL
         _dbContext = dbContext;
     }
 
-    public async Task<Dictionary<string, object?>> CreateBookInformation(BookInformationModel bookInformation)
+    public async Task<Dictionary<string, object?>> CreateBookInformation(BookInformationModel bookInformation, CancellationToken ct)
     {
         try
         {
-            _dbContext.DbSetBookInformation.Add(bookInformation);
+            _dbContext.BookInformation.Add(bookInformation);
             int result = await _dbContext.SaveChangesAsync();
 
             return new Dictionary<string, object?>

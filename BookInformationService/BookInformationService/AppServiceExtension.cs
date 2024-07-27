@@ -18,8 +18,7 @@ public static class AppServiceExtension
         }
         catch (Exception ex)
         {
-            Log.Error(ex, ex.Message);
-            Console.WriteLine($"Migration error: {ex.Message}");
+            Log.Verbose(ex, ex.Message);
         }
     }
 

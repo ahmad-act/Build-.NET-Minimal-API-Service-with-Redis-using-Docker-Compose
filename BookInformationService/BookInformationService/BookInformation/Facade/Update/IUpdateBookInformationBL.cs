@@ -4,6 +4,6 @@ namespace BookInformationService.BookInformation.Facade.Update
 {
     public interface IUpdateBookInformationBL
     {
-        Task<UpdateResponse> UpdateBookInformation(string apiVersion, int id, UpdateRequest request);
+        Task<UpdateResponse> UpdateBookInformation(string apiVersion, int id, UpdateRequest request, CancellationToken ct);
     }
 }

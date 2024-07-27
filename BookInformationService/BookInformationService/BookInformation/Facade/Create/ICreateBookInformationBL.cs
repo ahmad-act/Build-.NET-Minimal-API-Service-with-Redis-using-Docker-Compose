@@ -4,5 +4,5 @@ namespace BookInformationService.BookInformation.Facade.Create;
 
 public interface ICreateBookInformationBL
 {
-    Task<CreateResponse> CreateBookInformation(string apiVersion, BookInformation.Create.CreateRequest request);
+    Task<CreateResponse> CreateBookInformation(string apiVersion, BookInformation.Create.CreateRequest request, CancellationToken ct);
 }
